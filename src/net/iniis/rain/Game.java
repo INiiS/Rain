@@ -87,6 +87,13 @@ public class Game extends Canvas implements Runnable {
             createBufferStrategy(3);
             return;
         }
+
+        Graphics g = bs.getDrawGraphics(); //getDrawGraphics create link between graphics and the buffer strategy
+        //Graphics to be displayed have to be between the above line and the g.dispose()
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,getWidth(),getHeight());
+        g.dispose(); // disposes the current graphics, release the system resources.
+        bs.show();
     }
 
     public static void main(String[] args){
