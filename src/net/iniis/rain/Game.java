@@ -1,8 +1,12 @@
 package net.iniis.rain;
 
+import net.iniis.rain.graphics.Screen;
+
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 /*
     Runnable makes sure the thread contains the game object.
@@ -24,14 +28,24 @@ public class Game extends Canvas implements Runnable {
     private JFrame frame;
     private boolean running = false;
 
+    private Screen screen;
+
+    /*
+    Creates an image and then access it to be able to modify it.
+     */
+    private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+
     public Game() {
         /*
         Settings of window size, and creation of game window object.
          */
         Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size); //applying size setting to window
+        screen = new Screen(width, height);
 
         frame = new JFrame();
+
     }
 
     /*
@@ -73,30 +87,36 @@ public class Game extends Canvas implements Runnable {
     /*
     Logic of the game, runs at 60 FPS max.
      */
-    public void update(){
+    public void update() {
 
     }
 
     /*
     Rendering method, unrestricted FPS.
      */
-    public void render(){
+    public void render() {
 
         BufferStrategy bs = getBufferStrategy();
-        if(bs == null){
+        if (bs == null) {
             createBufferStrategy(3);
             return;
         }
+        screen.clear();
+        screen.render();
 
-        Graphics g = bs.getDrawGraphics(); //getDrawGraphics create link between graphics and the buffer strategy
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i] = screen.pixels[i];
+        }
+
+        Graphics g = bs.getDrawGraphics(); //getDrawGraphics creates link between graphics and the buffer strategy
         //Graphics to be displayed have to be between the above line and the g.dispose()
-        g.setColor(Color.BLACK);
-        g.fillRect(0,0,getWidth(),getHeight());
+
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         g.dispose(); // disposes the current graphics, release the system resources.
         bs.show();
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");
