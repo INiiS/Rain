@@ -70,18 +70,29 @@ public class Game extends Canvas implements Runnable {
     }
 
 
-    /*
+    public void run() {
+
+        long lastTime = System.nanoTime(); //time of system in nanoseconds
+        final double ns = 1000000000.0 / 60.0; //calculates how many nano seconds it takes to update the game
+        double delta = 0; //calculates the time it takes to complete one loop - delta =1 means 1/60s has gone by.
+
+          /*
     Implementation of Runnable.run()
     Main "game loop", so that our game runs after the 1st frame.
     Without this loop, the game would stop after the 1st frame would have been rendered.
      */
-    public void run() {
-
         while (running) {
-            update(); //logic of the game - 60 FPS
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            while (delta >= 1) { //occurs only once every 60 frames
+                update(); //logic of the game - 60 FPS
+                delta--;
+            }
+
             render(); // images of the game - unrestricted
 
         }
+        stop();
     }
 
     /*

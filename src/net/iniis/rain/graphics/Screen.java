@@ -2,8 +2,9 @@ package net.iniis.rain.graphics;
 
 public class Screen {
 
-    private int counter;
-    private int time;
+    int counter;
+    int xtime = 0;
+    int ytime = 0;
 
     private int width, height;
     public int[] pixels;
@@ -23,18 +24,19 @@ public class Screen {
 
     public void render() {
         /*
-        Use of counter & time to animate the pixels colorisation, and show the necessity to clear the screen
+        Use of counter & time to animate the pixels colorization, and show the necessity to clear the screen
          */
         counter++;
-        if (counter % 100 == 0) {
-            time++;
-        }
+        if (counter % 100 == 0) xtime++;
+        if (counter % 100 == 0) ytime++;
         /*
         Loops that moves through every pixels of the array
          */
         for (int y = 0; y < height; y++) {
+            if (ytime < 0 || ytime >= height) break;
             for (int x = 0; x < width; x++) {
-                pixels[time + time * width] = 0xFF00FF;
+                if (xtime < 0 || xtime >= width) break;
+                pixels[xtime + ytime * width] = 0xFF00FF;
 
             }
         }
