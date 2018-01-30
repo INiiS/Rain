@@ -1,6 +1,7 @@
 package net.iniis.rain;
 
 import net.iniis.rain.graphics.Screen;
+import net.iniis.rain.input.Keyboard;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -27,6 +28,7 @@ public class Game extends Canvas implements Runnable {
 
     private Thread thread;
     private JFrame frame;
+    private Keyboard key;
     private boolean running = false;
 
     private Screen screen;
@@ -43,9 +45,12 @@ public class Game extends Canvas implements Runnable {
          */
         Dimension size = new Dimension(width * scale, height * scale);
         setPreferredSize(size); //applying size setting to window
-        screen = new Screen(width, height);
 
+        screen = new Screen(width, height);
         frame = new JFrame();
+
+        key = new Keyboard();
+        addKeyListener(key);
 
     }
 
@@ -113,7 +118,14 @@ public class Game extends Canvas implements Runnable {
     /*
     Logic of the game, runs at 60 FPS max.
      */
+    int x = 0, y = 0;
+
     public void update() {
+        key.update();
+        if (key.up) y--; //if up, drag map up
+        if (key.down) y++;
+        if (key.left) x--;
+        if (key.right) x++;
 
     }
 
@@ -128,7 +140,7 @@ public class Game extends Canvas implements Runnable {
             return;
         }
         screen.clear();
-        screen.render();
+        screen.render(x, y);
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = screen.pixels[i];
@@ -153,5 +165,6 @@ public class Game extends Canvas implements Runnable {
         game.frame.setVisible(true); // VERY IMPORTANT : on false, window cannot be seen
 
         game.start();
+        game.requestFocus(); //make sure the game is in focus, so you don't have to click on it
     }
 }
