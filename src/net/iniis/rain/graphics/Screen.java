@@ -1,18 +1,24 @@
 package net.iniis.rain.graphics;
 
-public class Screen {
+import java.util.Random;
 
-    int counter;
-    int xtime = 0;
-    int ytime = 0;
+public class Screen {
 
     private int width, height;
     public int[] pixels;
+
+    public int[] tiles = new int[64 * 64];
+
+    private Random random = new Random();
 
     public Screen(int width, int height) {
         this.width = width;
         this.height = height;
         pixels = new int[width * height];
+
+        for (int i = 0; i < 64 * 64; i++) {
+            tiles[i] = random.nextInt(0xffffff);
+        }
     }
 
     public void clear() {
@@ -23,20 +29,16 @@ public class Screen {
     }
 
     public void render() {
-        /*
-        Use of counter & time to animate the pixels colorization, and show the necessity to clear the screen
-         */
-        counter++;
-        if (counter % 100 == 0) xtime++;
-        if (counter % 100 == 0) ytime++;
+
         /*
         Loops that moves through every pixels of the array
          */
         for (int y = 0; y < height; y++) {
-            if (ytime < 0 || ytime >= height) break;
+            if (y < 0 || y >= height) break;
             for (int x = 0; x < width; x++) {
-                if (xtime < 0 || xtime >= width) break;
-                pixels[xtime + ytime * width] = 0xFF00FF;
+                if (x < 0 || x >= width) break;
+                int tileIndex = (x / 16) + (y / 16) * 64; //find the correct tile for a coordinate - we divide by 16 because one tile is 16*16
+                pixels[x + y * width] = tiles[tileIndex];
 
             }
         }
