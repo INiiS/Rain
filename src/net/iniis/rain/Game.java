@@ -84,7 +84,7 @@ public class Game extends Canvas implements Runnable {
         double delta = 0; //calculates the time it takes to complete one loop - delta =1 means 1/60s has gone by.
         int frames = 0;
         int updates = 0;
-
+        requestFocus();
           /*
     Implementation of Runnable.run()
     Main "game loop", so that our game runs after the 1st frame.
@@ -103,7 +103,7 @@ public class Game extends Canvas implements Runnable {
             render(); // images of the game - unrestricted
             frames++;
 
-            if (System.currentTimeMillis() - timer > 1000) {
+            if (System.currentTimeMillis() - timer >= 1000) {
                 timer += 1000;
                 System.out.println(updates + " ups, " + frames + " fps");
                 frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
@@ -165,6 +165,5 @@ public class Game extends Canvas implements Runnable {
         game.frame.setVisible(true); // VERY IMPORTANT : on false, window cannot be seen
 
         game.start();
-        game.requestFocus(); //make sure the game is in focus, so you don't have to click on it
     }
 }

@@ -35,17 +35,12 @@ public class Screen {
         Loops that moves through every pixels of the array
          */
         for (int y = 0; y < height; y++) {
-            int yy = y + yOffset;
-            //if (yy < 0 || yy >= height) break;
+            int yp = y + yOffset;
+            if (yp < 0 || yp >= height) continue;
             for (int x = 0; x < width; x++) {
-                int xx = x + xOffset;
-                //if (xx < 0 || xx >= width) break;
-                /*
-                find the correct tile for a coordinate
-                Uses offsets + xx & yy to simulate moving through the map.
-                 */
-                int tileIndex = ((xx / 16) & MAP_SIZE_MASK) + ((yy / 16) & MAP_SIZE_MASK) * MAP_SIZE;
-                pixels[x + y * width] = tiles[tileIndex];
+                int xp = x + xOffset;
+                if (xp < 0 || xp >= width) continue;
+                pixels[xp + yp * width] = Sprite.grass.pixels[(x & 15) + (y & 15) * Sprite.grass.SIZE];
 
             }
         }
